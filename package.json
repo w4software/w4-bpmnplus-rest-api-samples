@@ -1,0 +1,11 @@
+{
+  "name": "w4-bpmnplus-rest-api-samples",
+  "version": "0.0.1",
+  "description": "Some samples of REST API usage of W4 BPMN+",
+  "author": "W4 Software",
+  "dependencies":
+  {
+    "http": ">= 0.0.0",
+    "node-rest-client": ">= 1.0.3"
+  }
+}
