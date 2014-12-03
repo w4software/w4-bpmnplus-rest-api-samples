@@ -29,4 +29,13 @@ engine. You can edit the javascript variables present at the beginning of the
 test to map it on a process you already have.
 
     node instanciate-process-instance
- 
+
+
+License
+-------
+
+Copyright (c) 2014, W4 S.A. 
+
+This project is licensed under the terms of the MIT License (see LICENSE file)
+
+Ce projet est licencié sous les termes de la licence MIT (voir le fichier LICENSE)
