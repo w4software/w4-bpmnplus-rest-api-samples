@@ -7,6 +7,7 @@ module.exports =
     var uri = options.path;
     
     var formData = '';
+    var httpEntity = false;
     if (options.parameters)
     {
       for (var parameterName in options.parameters)
@@ -14,6 +15,10 @@ module.exports =
         var parameterValue = options.parameters[parameterName];
         formData += parameterName + '=' + parameterValue;
         formData += '&';
+      }
+      if (formData.length > 0)
+      {
+        formData = formData.slice(0, -1);
       }
     }
 
@@ -24,33 +29,44 @@ module.exports =
       path: uri,
       method: options.method || 'GET'
     };
-    
+
     if ('authUser' in options)
     {
       httpOptions.auth = options.authUser + ':' + options.authPassword
     }
 
-    if (httpOptions.method == 'GET')
+    if (httpOptions.method == 'POST' || httpOptions.method == 'PUT')
     {
-      uri += '?' + formData;
+      httpEntity = formData;
     }
-    else
+
+    if (httpOptions.method == 'DELETE')
+    {
+    	httpEntity = ' ';
+    }
+
+    if (httpOptions.method == 'GET' || httpOptions.method == 'DELETE')
+    {
+      httpOptions.path += '?' + formData
+    }
+
+    if (httpEntity)
     {
       httpOptions.headers =
       {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': formData.length,
+        'Content-Length': httpEntity.length,
       }
     }
 
     console.log(httpOptions.method + ' ' + httpOptions.path);
-    
+
     var request = http.request(httpOptions, function(response)
     {
       response.setEncoding('utf8');
       response.on('data', function (data)
       {
-        console.log(data);
+        console.log('\nRESPONSE:\n' + JSON.stringify(JSON.parse(data), null, 2));
       });
     });
 
@@ -59,10 +75,10 @@ module.exports =
       console.log('problem with request: ' + error.message);
     });
 
-    if (httpOptions.method == 'POST')
+    if (httpEntity)
     {
-      console.log('POST DATA: ' + formData);
-      request.write(formData + '\n\n');
+      console.log('BODY: ' + httpEntity);
+      request.write(httpEntity + '\n\n');
     }
 
     request.end();
